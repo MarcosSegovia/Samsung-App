@@ -1,0 +1,30 @@
+#SceneScene1 {
+	position : absolute;
+	left : 0px;
+	top : 0px;
+	width : 960px;
+	height : 540px;
+	background-color : #ffffff;
+	background-image : url('');
+}
+
+#backgroundImage
+{
+	width:960px;
+	height:540px;
+}
+.containerPinCode
+{
+	position: fixed;
+    top: 240px;
+    left: 420px;
+    color: white;
+    text-align:center;
+}
+
+#pincode
+{
+	font-size: 20px;
+}
+
+
