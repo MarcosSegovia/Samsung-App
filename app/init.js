@@ -1,4 +1,8 @@
 
+//Global variables
+var numPlayers;
+var playersApp = new Array();
+
 function onStart () {
 	// TODO : Add your Initialize code here
 	// NOTE : In order to start your app, call "sf.start()" at the end of this function!!

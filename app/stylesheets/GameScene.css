@@ -7,3 +7,38 @@
 	background-color : #ffffff;
 	background-image : url('');
 }
+
+#backgroundImage
+{
+	width:960px;
+	height:540px;
+}
+
+.containerExample
+{
+	position: fixed;
+    top: 240px;
+    left: 420px;
+    color: white;
+    text-align:center;
+}
+
+.wrapperPlayers
+{
+	position: fixed;
+	top: 10px;
+	left: 20px;
+}
+
+.playerTemplate
+{
+	float:left;
+	margin-left:70px;
+	margin-right:110px;
+}
+
+.playerTemplate img
+{
+	width:80;
+	height:110;
+}

@@ -1,5 +1,5 @@
 alert('SceneScene1.js loaded');
-var delay;
+
 function SceneScene1() {
 
 };
@@ -10,7 +10,7 @@ SceneScene1.prototype.initialize = function () {
 	// initialize the scene controls and styles, and initialize your variables here
 	// scene HTML and CSS will be loaded before this function is called
 	localDevice = null;
-	delay = 4000;
+	numPlayers=0;
 };
 
 SceneScene1.prototype.handleShow = function (data) {
@@ -25,15 +25,13 @@ SceneScene1.prototype.handleShow = function (data) {
 	    	localDevice.getPinCode(function(pin) {
 	    		console.log("pin = " + pin.code);
 	    		$( "#pincode" ).append( pin.code );
-	    		setTimeout(function(){
-	    		sf.scene.hide('Scene1');
-	    		sf.scene.show('GameScene');
-	    		sf.scene.focus('GameScene'); }, delay);
 	    		
 	        });
 
 	    	channel.on("clientConnect", function(client) {
 	    		console.log("new client = " + client);
+	    		playersApp[numPlayers]['idClient'] = client.getId();
+	    		numPlayers++;
 	    		client.send("Welcome " + client.attributes.name);
 	    		
             });
@@ -69,6 +67,9 @@ SceneScene1.prototype.handleKeyDown = function (keyCode) {
 		case sf.key.DOWN:
 			break;
 		case sf.key.ENTER:
+			sf.scene.hide('Scene1');
+    		sf.scene.show('GameScene');
+    		sf.scene.focus('GameScene');
 			break;
 		default:
 			alert("handle default key event, key code(" + keyCode + ")");
