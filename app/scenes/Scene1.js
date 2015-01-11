@@ -1,5 +1,5 @@
 alert('SceneScene1.js loaded');
-
+var cardsApp;
 function SceneScene1() {
 
 };
@@ -19,9 +19,10 @@ SceneScene1.prototype.handleShow = function (data) {
 	// this function will be called when the scene manager show this scene
 	webapis.multiscreen.Device.getCurrent(function(device) {
     	
+		
 		localDevice = device;
 
-	    device.openChannel("com.mydomain.myapp.mychannel", {name:"TVClient"}, function(channel) {
+	    localDevice.openChannel("com.mydomain.myapp.mychannel", {name:"TVClient"}, function(channel) {
 	        
 	    	actualChannel = channel;
 	    	localDevice.getPinCode(function(pin) {
@@ -29,6 +30,15 @@ SceneScene1.prototype.handleShow = function (data) {
 	    		$( "#pincode" ).append( pin.code );
 	    		
 	        });
+	    	
+	    	channel.on("clientConnect", function(client) {
+	    		console.log("new client = " + client);
+	    		playersApp[numPlayers]['idClient'] = client.getId();
+	    		numPlayers++;
+	    		client.send("Welcome " + client.attributes.name);
+	    		console.log(client.attributes.name+" connected to the cannel.");
+	    		
+	    	});
 
 	    	
 	    });
@@ -73,11 +83,3 @@ SceneScene1.prototype.handleKeyDown = function (keyCode) {
 	}
 };
 
-actualChannel.on("clientConnect", function(client) {
-	console.log("new client = " + client);
-	playersApp[numPlayers]['idClient'] = client.getId();
-	numPlayers++;
-	client.send("Welcome " + client.attributes.name);
-	console.log(client.attributes.name+" connected to the cannel.");
-	
-});

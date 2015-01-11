@@ -3,7 +3,6 @@
 var numPlayers;
 var playerTurn;
 var playersApp = new Array();
-var cardsApp = new Array();
 var localDevice;
 var actualChannel;
 

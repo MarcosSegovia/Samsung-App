@@ -42,3 +42,15 @@
 	width:80;
 	height:110;
 }
+
+.gameScenario
+{
+	position: fixed;
+	top: 100px;
+	left: 30px;
+}
+
+.gameScenario img
+{
+	margin-left:3px;
+}
