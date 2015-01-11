@@ -21,14 +21,15 @@ SceneScene1.prototype.handleShow = function (data) {
 		localDevice = device;
 
 	    device.openChannel("com.mydomain.myapp.mychannel", {name:"TVClient"}, function(channel) {
-	        	
+	        
+	    	actualChannel = channel;
 	    	localDevice.getPinCode(function(pin) {
 	    		console.log("pin = " + pin.code);
 	    		$( "#pincode" ).append( pin.code );
 	    		
 	        });
 
-	    	channel.on("clientConnect", function(client) {
+	    	actualChannel.on("clientConnect", function(client) {
 	    		console.log("new client = " + client);
 	    		playersApp[numPlayers]['idClient'] = client.getId();
 	    		numPlayers++;

@@ -1,7 +1,11 @@
 
 //Global variables
 var numPlayers;
+var playerTurn;
 var playersApp = new Array();
+var cardsApp = new Array();
+var localDevice;
+var actualChannel;
 
 function onStart () {
 	// TODO : Add your Initialize code here
