@@ -1,5 +1,4 @@
 alert('SceneScene1.js loaded');
-var cardsApp;
 function SceneScene1() {
 
 };

@@ -1,6 +1,6 @@
 alert('SceneGameScene.js loaded');
 var cardComes;
-cardsApp;
+var cardsApp = [];
 
 function SceneGameScene() {
 	
@@ -211,7 +211,6 @@ function parseJson()
 
 
 	    var numCard=0;
-	    cardsApp=[];
 	    
 	    $.each( data.cards, function( key, val ) {
 	    	cardsApp[numCard] = [];
