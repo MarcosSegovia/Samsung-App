@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <widget xmlns="http://www.samsung.com/">
-  <cpname></cpname>
-  <cplogo></cplogo>
-  <cpauthjs></cpauthjs>
-  <ThumbIcon></ThumbIcon>
-  <BigThumbIcon></BigThumbIcon>
-  <ListIcon></ListIcon>
-  <BigListIcon></BigListIcon>
-  <category></category>
+  <cpname/>
+  <cplogo/>
+  <cpauthjs/>
+  <ThumbIcon/>
+  <BigThumbIcon/>
+  <ListIcon/>
+  <BigListIcon/>
+  <category/>
   <autoUpdate>n</autoUpdate>
   <ver>0.100</ver>
-  <mgrver></mgrver>
+  <mgrver/>
   <fullwidget>y</fullwidget>
   <type>user</type>
   <srcctl>y</srcctl>
@@ -19,14 +18,14 @@
   <childlock>n</childlock>
   <videomute>n</videomute>
   <dcont>y</dcont>
-  <widgetname>smarttv_rubikapp</widgetname>
-  <description></description>
+  <widgetname>Samsung-App</widgetname>
+  <description/>
   <width>960</width>
   <height>540</height>
   <author>
-    <name></name>
-    <email></email>
-    <link></link>
-    <organization></organization>
+    <name/>
+    <email/>
+    <link/>
+    <organization/>
   </author>
 </widget>

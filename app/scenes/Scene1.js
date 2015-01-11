@@ -10,6 +10,7 @@ SceneScene1.prototype.initialize = function () {
 	// initialize the scene controls and styles, and initialize your variables here
 	// scene HTML and CSS will be loaded before this function is called
 	localDevice = null;
+	actualChannel = null;
 	numPlayers=0;
 };
 
@@ -29,13 +30,7 @@ SceneScene1.prototype.handleShow = function (data) {
 	    		
 	        });
 
-	    	actualChannel.on("clientConnect", function(client) {
-	    		console.log("new client = " + client);
-	    		playersApp[numPlayers]['idClient'] = client.getId();
-	    		numPlayers++;
-	    		client.send("Welcome " + client.attributes.name);
-	    		
-            });
+	    	
 	    });
 	});
 };
@@ -77,3 +72,12 @@ SceneScene1.prototype.handleKeyDown = function (keyCode) {
 			break;
 	}
 };
+
+actualChannel.on("clientConnect", function(client) {
+	console.log("new client = " + client);
+	playersApp[numPlayers]['idClient'] = client.getId();
+	numPlayers++;
+	client.send("Welcome " + client.attributes.name);
+	console.log(client.attributes.name+" connected to the cannel.");
+	
+});
