@@ -1,6 +1,6 @@
 alert('SceneGameScene.js loaded');
 var cardComes;
-var cardsApp = [];
+
 
 function SceneGameScene() {
 	
@@ -16,22 +16,23 @@ SceneGameScene.prototype.initialize = function () {
 	playerTurn=0;
 	
 	
-	for(var i=0; i<numPlayers; i++)
+	/*for(var i=0; i<numPlayers; i++)
 	{
 		playersApp[i]['color'] = colors[i];
-	}
+	}*/
 	
-	parseJson();
 };
 
-SceneGameScene.prototype.handleShow = function (data) {
+SceneGameScene.prototype.handleShow = function (channelSent) {
 	alert("SceneGameScene.handleShow()");
 	// this function will be called when the scene manager show this scene
+	
+	actualChannel = channelSent;
 	
 	$( "#example" ).append( "Handing out cards..." );
 	
 	//Pintamos los jugadores
-	for(var i=0; i<4; i++)
+	for(var i=0; i<numPlayers; i++)
 	{
 		$( ".wrapperPlayers" ).append('<div class="playerTemplate"> <img height="68" width="50" src="images/j'+(i+1)+'.png"> <div>');
 		
@@ -46,7 +47,6 @@ SceneGameScene.prototype.handleShow = function (data) {
 		for(var k=0; k<8; k++)
 		{
 			card = chooseRandomCardFromPool();
-			console.log("Cojones pasa aqui !");
 			//string ={"number": card[0]['number'], "colour": card[0]['colour']};
 			//sendCardToPlayer(card, playersApp[j]['idClient']);
 		}
@@ -165,7 +165,7 @@ SceneGameScene.prototype.handleKeyDown = function (keyCode) {
 };
 
 
-actualChannel.on("message", function(msg, sender)
+/*actualChannel.on("message", function(msg, sender)
 {
 	if(msg=="Pass")
 	{
@@ -202,10 +202,10 @@ actualChannel.on("message", function(msg, sender)
 	
 	
 	
-});
+});*/
 
 
-function parseJson()
+/*function parseJson()
 {
 	$.getJSON( "../Samsung-App/webservices/cards.json", function( data ) {
 
@@ -224,7 +224,7 @@ function parseJson()
 	    console.log('Cards loaded succesfuly.');
 	});
 }
-
+*/
 /*
 function sendNextPlayer();
 {
@@ -244,8 +244,7 @@ function chooseRandomCardFromPool()
 {
 	//Hacemos un random para todos los posibles numeros
 	var number = Math.floor((Math.random() *52) + 1);
-	console.log(cardsApp[0]['delivered']);
-	while(true)
+	/*while(true)
 	{
 		console.log("COOOOOO: "+cardsApp[number]['delivered']);
 		if(cardsApp[number]['delivered']==false)
@@ -257,7 +256,7 @@ function chooseRandomCardFromPool()
 		{
 			number++;
 		}
-	}	
+	}	*/
 }
 
 //Enviamos la carta y nos muestra el tablero reordenado.

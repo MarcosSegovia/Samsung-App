@@ -1,4 +1,5 @@
 alert('SceneScene1.js loaded');
+
 function SceneScene1() {
 
 };
@@ -11,6 +12,7 @@ SceneScene1.prototype.initialize = function () {
 	localDevice = null;
 	actualChannel = null;
 	numPlayers=0;
+	
 };
 
 SceneScene1.prototype.handleShow = function (data) {
@@ -27,21 +29,23 @@ SceneScene1.prototype.handleShow = function (data) {
 	    	localDevice.getPinCode(function(pin) {
 	    		console.log("pin = " + pin.code);
 	    		$( "#pincode" ).append( pin.code );
+	    		numPlayers = 4;
+		    	
+		
+	    	});
+	    	actualChannel.on("clientConnect", function(client) {
+				console.log("new client = " + client);
+				playersApp[numPlayers]['idClient'] = client.getId();
+				numPlayers++;
+				client.send("Welcome " + client.attributes.name);
+				console.log(client.attributes.name+" connected to the cannel.");
 	    		
 	        });
-	    	
-	    	channel.on("clientConnect", function(client) {
-	    		console.log("new client = " + client);
-	    		playersApp[numPlayers]['idClient'] = client.getId();
-	    		numPlayers++;
-	    		client.send("Welcome " + client.attributes.name);
-	    		console.log(client.attributes.name+" connected to the cannel.");
-	    		
-	    	});
 
 	    	
 	    });
 	});
+	
 };
 
 SceneScene1.prototype.handleHide = function () {
@@ -73,7 +77,7 @@ SceneScene1.prototype.handleKeyDown = function (keyCode) {
 			break;
 		case sf.key.ENTER:
 			sf.scene.hide('Scene1');
-    		sf.scene.show('GameScene');
+    		sf.scene.show('GameScene', actualChannel);
     		sf.scene.focus('GameScene');
 			break;
 		default:
