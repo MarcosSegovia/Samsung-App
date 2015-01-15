@@ -224,9 +224,10 @@ function sendCardToPlayer(stringCard, idPlayer)
 function chooseRandomCardFromPool()
 {
 	//Hacemos un random para todos los posibles numeros
-	var number = Math.floor((Math.random() *52) + 1);
+	var number = Math.floor((Math.random() *52));
 	while(true)
 	{
+		console.log(number);
 		if(cardsApp[number]['delivered']==false)
 		{
 			cardsApp[number]['delivered']=true;
