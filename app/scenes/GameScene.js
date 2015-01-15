@@ -38,7 +38,7 @@ SceneGameScene.prototype.handleShow = function (channelSent) {
 		
 	}
 	
-	//console.log(cardsApp.length);
+	console.log('Longitud Array Cartas mazo: '+cardsApp.length);
 	
 	//Repartimos 8 cartas a cada jugador y las borramos de nuestra Pool
 	for(var j=0; j<2; j++)
@@ -46,7 +46,9 @@ SceneGameScene.prototype.handleShow = function (channelSent) {
 		//8 cartas
 		for(var k=0; k<8; k++)
 		{
-			card = chooseRandomCardFromPool();
+			var card = chooseRandomCardFromPool();
+			console.log('CARTA RECIBIDA: '+card['number']);
+			console.log('CARTA RECIBIDA: '+card['colour']);
 			//string ={"number": card[0]['number'], "colour": card[0]['colour']};
 			//sendCardToPlayer(card, playersApp[j]['idClient']);
 		}
@@ -204,27 +206,6 @@ SceneGameScene.prototype.handleKeyDown = function (keyCode) {
 	
 });*/
 
-
-/*function parseJson()
-{
-	$.getJSON( "../Samsung-App/webservices/cards.json", function( data ) {
-
-
-	    var numCard=0;
-	    
-	    $.each( data.cards, function( key, val ) {
-	    	cardsApp[numCard] = [];
-	    	cardsApp[numCard]['number']= val.number;
-	    	cardsApp[numCard]['colour']= val.colour;
-	    	cardsApp[numCard]['delivered']= val.delivered;
-	        numCard++;
-	    });
-	    
-	    //console.log(cardsApp.length);
-	    console.log('Cards loaded succesfuly.');
-	});
-}
-*/
 /*
 function sendNextPlayer();
 {
@@ -244,19 +225,28 @@ function chooseRandomCardFromPool()
 {
 	//Hacemos un random para todos los posibles numeros
 	var number = Math.floor((Math.random() *52) + 1);
-	/*while(true)
+	while(true)
 	{
-		console.log("COOOOOO: "+cardsApp[number]['delivered']);
 		if(cardsApp[number]['delivered']==false)
 		{
 			cardsApp[number]['delivered']=true;
-			return cardsApp[number];
+			var card = new Array();
+			card['number'] = cardsApp[number]['number'];
+			card['colour'] = cardsApp[number]['colour'];
+			return card;
 		}
 		else
 		{
-			number++;
+			if(number==51)
+			{
+				number=0;
+			}
+			else
+			{
+				number++;
+			}
 		}
-	}	*/
+	}
 }
 
 //Enviamos la carta y nos muestra el tablero reordenado.
