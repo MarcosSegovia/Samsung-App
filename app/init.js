@@ -4,7 +4,6 @@ var numPlayers;
 var playerTurn;
 var playersApp = new Array();
 var localDevice;
-var actualChannel;
 
 function onStart () {
 	// TODO : Add your Initialize code here

@@ -1,7 +1,6 @@
 alert('SceneGameScene.js loaded');
 var cardComes;
-
-
+var table;
 function SceneGameScene() {
 	
 };
@@ -12,7 +11,8 @@ SceneGameScene.prototype.initialize = function () {
 	// initialize the scene controls and styles, and initialize your variables here
 	// scene HTML and CSS will be loaded before this function is called
 	var colors = ["black", "blue", "green", "red"];
-	cardComes=false;
+	cardComes = false;
+	table = new Array();
 	playerTurn=0;
 	
 	
@@ -49,11 +49,52 @@ SceneGameScene.prototype.handleShow = function (channelSent) {
 			var card = chooseRandomCardFromPool();
 			console.log('CARTA RECIBIDA: '+card['number']);
 			console.log('CARTA RECIBIDA: '+card['colour']);
+			
+			//Montamos nuestro string json y lo enviamos al usuario via mensaje.
 			//string ={"number": card[0]['number'], "colour": card[0]['colour']};
 			//sendCardToPlayer(card, playersApp[j]['idClient']);
 		}
 	}
 	$("#example").fadeOut("slow");
+	
+	actualChannel.on("message", function(msg, sender)
+	{
+		if(msg=="Pass")
+		{
+			if(playerTurn==numPlayers-1)
+			{
+				playerTurn=0;
+			}
+			else
+			{
+				playerTurn++;
+			}
+			sendNextPlayer();
+		}
+		else
+		{	
+			//Hemos sido avisados previamente, leemos la carta que nos envía el player actual.
+			if(cardComes)
+			{
+				cardComes=false;
+				
+				msg
+				
+			}
+			else
+			{
+				//Nos avisa el usuario del dispositivo, que va a enviar una carta.
+				if(msg=="Card")
+				{
+					cardComes=true;
+				}
+			}
+			
+		}
+		
+		
+		
+	});
 	
 	var cards=[];
 	cards[0]=[];
@@ -167,47 +208,10 @@ SceneGameScene.prototype.handleKeyDown = function (keyCode) {
 };
 
 
-/*actualChannel.on("message", function(msg, sender)
-{
-	if(msg=="Pass")
-	{
-		if(playerTurn==numPlayers-1)
-		{
-			playerTurn=0;
-		}
-		else
-		{
-			playerTurn++;
-		}
-		sendNextPlayer();
-	}
-	else
-	{	
-		//Hemos sido avisados previamente, leemos la carta que nos envía el player actual.
-		if(cardComes)
-		{
-			cardComes=false;
-			
-			//Chicha
-			
-		}
-		else
-		{
-			//Nos avisa el usuario del dispositivo, que va a enviar una carta.
-			if(msg=="Card")
-			{
-				cardComes=true;
-			}
-		}
-		
-	}
-	
-	
-	
-});*/
 
-/*
-function sendNextPlayer();
+
+
+function sendNextPlayer()
 {
 	//Enviamos a todos los jugadores info sobre de quién es el turno.
 	actualChannel.send("Player "+(playerTurn+1)+" turn.", "broadcast");
@@ -215,12 +219,13 @@ function sendNextPlayer();
 	actualChannel.send("Go", playersApp[playerTurn]['idClient']);
 }
 
+
 function sendCardToPlayer(stringCard, idPlayer)
 {
 	actualChannel.send('Card', idPlayer);
 	actualChannel.send(stringCard, idPlayer);
 }
-*/
+
 function chooseRandomCardFromPool()
 {
 	//Hacemos un random para todos los posibles numeros

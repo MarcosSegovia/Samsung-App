@@ -22,18 +22,19 @@ SceneScene1.prototype.handleShow = function (data) {
     	
 		
 		localDevice = device;
-
+		updatePinCode();
+		
 	    localDevice.openChannel("com.mydomain.myapp.mychannel", {name:"TVClient"}, function(channel) {
 	        
 	    	actualChannel = channel;
-	    	localDevice.getPinCode(function(pin) {
+	    	/*localDevice.getPinCode(function(pin) {
 	    		console.log("pin = " + pin.code);
 	    		$( "#pincode" ).append( pin.code );
 	    		numPlayers = 4;
 		    	
 		
-	    	});
-	    	actualChannel.on("clientConnect", function(client) {
+	    	});*/
+	    	channel.on("clientConnect", function(client) {
 				console.log("new client = " + client);
 				playersApp[numPlayers]['idClient'] = client.getId();
 				numPlayers++;
@@ -84,5 +85,21 @@ SceneScene1.prototype.handleKeyDown = function (keyCode) {
 			alert("handle default key event, key code(" + keyCode + ")");
 			break;
 	}
+};
+
+updatePinCode = function()
+{
+	localDevice.getPinCode(onPinCodeUpdate, function(error) {
+        console.error("device.getPinCode() Error : ", error);
+    });
+};
+
+onPinCodeUpdate = function(pin)
+{
+	console.log("App.onPinCodeUpdate", arguments);
+	$( "#pincode" ).html( pin.code );
+	
+	// Update the PIN every time it expires
+    setTimeout(updatePinCode, pin.ttl*1000 );
 };
 
