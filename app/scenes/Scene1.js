@@ -23,28 +23,8 @@ SceneScene1.prototype.handleShow = function (data) {
 		
 		localDevice = device;
 		updatePinCode();
-		
-	    localDevice.openChannel("com.mydomain.myapp.mychannel", {name:"TVClient"}, function(channel) {
-	        
-	    	actualChannel = channel;
-	    	/*localDevice.getPinCode(function(pin) {
-	    		console.log("pin = " + pin.code);
-	    		$( "#pincode" ).append( pin.code );
-	    		numPlayers = 4;
-		    	
-		
-	    	});*/
-	    	channel.on("clientConnect", function(client) {
-				console.log("new client = " + client);
-				playersApp[numPlayers]['idClient'] = client.getId();
-				numPlayers++;
-				client.send("Welcome " + client.attributes.name);
-				console.log(client.attributes.name+" connected to the cannel.");
-	    		
-	        });
-
-	    	
-	    });
+		connectToChannel();
+	    
 	});
 	
 };
@@ -85,6 +65,34 @@ SceneScene1.prototype.handleKeyDown = function (keyCode) {
 			alert("handle default key event, key code(" + keyCode + ")");
 			break;
 	}
+};
+
+connectToChannel = function(){
+	
+	localDevice.openChannel("com.samsung.multiscreen.rubikapp", {name:"TVClient"}, onConnect, function(error) {
+        console.log("device.openChannel() Error : ", error);
+        App.updateConnectionStatus("error: channel");            
+    });
+};
+
+onConnect = function(channel)
+{
+	console.log("Channel Open Successfuly.");
+	actualChannel = channel;
+	
+	channel.on("clientConnect", function(client) {
+		console.log("new client = " + client);
+		//playersApp[numPlayers]['idClient'] = client.getId();
+		numPlayers++;
+		var message = {
+            type:"chat",
+            text: "Welcome "+client.attributes.name+"! This message was sent to you encrypted"
+        };
+
+        client.send(JSON.stringify(message), true);
+		console.log(client.attributes.name+" connected to the cannel.");
+		
+    });
 };
 
 updatePinCode = function()
