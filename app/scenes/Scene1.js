@@ -57,6 +57,15 @@ SceneScene1.prototype.handleKeyDown = function (keyCode) {
 		case sf.key.DOWN:
 			break;
 		case sf.key.ENTER:
+			
+			var message = {
+	            type:"app",
+	            text: "Start"
+	        };
+			//Avisamos a todos los usuarios
+			actualChannel.send(JSON.stringify(message), "broadcast");
+			
+			//Cambiamos de Escena.
 			sf.scene.hide('Scene1');
     		sf.scene.show('GameScene', actualChannel);
     		sf.scene.focus('GameScene');
