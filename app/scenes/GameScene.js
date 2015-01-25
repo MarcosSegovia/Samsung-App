@@ -63,6 +63,8 @@ SceneGameScene.prototype.handleShow = function () {
 		
 		if(message.text=="EndTurn")
 		{
+			var card = chooseRandomCardFromPool();
+			sendCardToPlayer(card['number'], card['colour'], playersApp[playerTurn]['idClient']);
 			removeBorderActualPlayer();
 			
 			if(playerTurn==numPlayers-1)
@@ -93,8 +95,12 @@ SceneGameScene.prototype.handleShow = function () {
 	
 	//Carta aleatoria para empezar el juego.
 	var startingCard = chooseRandomCardFromPool();
+	//Añadimos la carta a la array de la mesa y a la mostramos en la mesa.
+	table[cardsTable] = new Array();
+	table[cardsTable]['number'] = startingCard['number'];
+	table[cardsTable]['colour'] = startingCard['colour'];
+	cardsTable++;
 	placeCard(startingCard['number'], startingCard['colour']);
-	
 	setBorderActualPlayer();
 	sendNextPlayer();
 	/*
@@ -171,8 +177,8 @@ SceneGameScene.prototype.handleShow = function () {
 	placeCard(cards[15]['number'], cards[15]['colour']);
 	placeCard(cards[16]['number'], cards[16]['colour']);
 	placeCard(cards[17]['number'], cards[17]['colour']);
-	*/
 	
+	*/
 };
 
 SceneGameScene.prototype.handleHide = function () {
@@ -227,6 +233,17 @@ function sendNextPlayer()
 			text: "Go"
 	};
 	actualChannel.send(JSON.stringify(string2), playersApp[playerTurn]['idClient']);
+	
+	//Enviamos al usuario todo el tablero.
+	for(var i=0; i<cardsTable;i++)
+	{
+		var string3 = {
+				text: "Table",
+				number: table[i]['number'],
+				colour: table[i]['colour']
+		};
+		actualChannel.send(JSON.stringify(string3), playersApp[playerTurn]['idClient']);
+	}
 }
 
 
