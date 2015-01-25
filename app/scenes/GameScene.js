@@ -1,6 +1,8 @@
 alert('SceneGameScene.js loaded');
 var cardComes;
 var table;
+var cardsTable;
+
 function SceneGameScene() {
 	
 };
@@ -10,9 +12,10 @@ SceneGameScene.prototype.initialize = function () {
 	// this function will be called only once when the scene manager show this scene first time
 	// initialize the scene controls and styles, and initialize your variables here
 	// scene HTML and CSS will be loaded before this function is called
-	var colors = ["black", "blue", "green", "red"];
+	
 	cardComes = false;
 	table = new Array();
+	cardsTable = 0;
 	playerTurn=0;
 	
 	
@@ -23,25 +26,21 @@ SceneGameScene.prototype.initialize = function () {
 	
 };
 
-SceneGameScene.prototype.handleShow = function (channelSent) {
+SceneGameScene.prototype.handleShow = function () {
 	alert("SceneGameScene.handleShow()");
 	// this function will be called when the scene manager show this scene
 	
-	actualChannel = channelSent;
 	
 	$( "#example" ).append( "Handing out cards..." );
 	
 	//Pintamos los jugadores
 	for(var i=0; i<numPlayers; i++)
 	{
-		$( ".wrapperPlayers" ).append('<div class="playerTemplate"> <img height="68" width="50" src="images/j'+(i+1)+'.png"> <div>');
-		
+		$( ".wrapperPlayers" ).append('<div id="player'+i+'" class="playerTemplate"> <img height="68" width="50" src="images/'+playersApp[i]['colour']+'.png"> <div>');
 	}
 	
-	console.log('Longitud Array Cartas mazo: '+cardsApp.length);
-	
 	//Repartimos 8 cartas a cada jugador y las borramos de nuestra Pool
-	for(var j=0; j<2; j++)
+	for(var j=0; j<numPlayers; j++)
 	{
 		//8 cartas
 		for(var k=0; k<8; k++)
@@ -51,16 +50,21 @@ SceneGameScene.prototype.handleShow = function (channelSent) {
 			console.log('CARTA RECIBIDA: '+card['colour']);
 			
 			//Montamos nuestro string json y lo enviamos al usuario via mensaje.
-			//string ={"number": card[0]['number'], "colour": card[0]['colour']};
-			//sendCardToPlayer(card, playersApp[j]['idClient']);
+			
+			
+			sendCardToPlayer(card['number'], card['colour'], playersApp[j]['idClient']);
 		}
 	}
 	$("#example").fadeOut("slow");
 	
 	actualChannel.on("message", function(msg, sender)
 	{
-		if(msg=="Pass")
+		var message = JSON.parse(msg);
+		
+		if(message.text=="EndTurn")
 		{
+			removeBorderActualPlayer();
+			
 			if(playerTurn==numPlayers-1)
 			{
 				playerTurn=0;
@@ -69,33 +73,31 @@ SceneGameScene.prototype.handleShow = function (channelSent) {
 			{
 				playerTurn++;
 			}
-			sendNextPlayer();
-		}
-		else
-		{	
-			//Hemos sido avisados previamente, leemos la carta que nos envía el player actual.
-			if(cardComes)
-			{
-				cardComes=false;
-				
-				msg
-				
-			}
-			else
-			{
-				//Nos avisa el usuario del dispositivo, que va a enviar una carta.
-				if(msg=="Card")
-				{
-					cardComes=true;
-				}
-			}
 			
+			sendNextPlayer();
+			setBorderActualPlayer();
 		}
-		
-		
+		//Nos avisa el usuario del dispositivo, que va a enviar una carta.
+		if(message.text=="Card")
+		{
+			//Guardamos la carta en nuestra array de la mesa.
+			table[cardsTable] = new Array();
+			table[cardsTable]['number'] = message.number;
+			table[cardsTable]['colour'] = message.colour;
+			cardsTable++;
+			//Emviamos la carta a la mesa.
+			placeCard(message.number, message.colour);
+		}
 		
 	});
 	
+	//Carta aleatoria para empezar el juego.
+	var startingCard = chooseRandomCardFromPool();
+	placeCard(startingCard['number'], startingCard['colour']);
+	
+	setBorderActualPlayer();
+	sendNextPlayer();
+	/*
 	var cards=[];
 	cards[0]=[];
 	cards[0]['number'] = 10;
@@ -169,6 +171,7 @@ SceneGameScene.prototype.handleShow = function (channelSent) {
 	placeCard(cards[15]['number'], cards[15]['colour']);
 	placeCard(cards[16]['number'], cards[16]['colour']);
 	placeCard(cards[17]['number'], cards[17]['colour']);
+	*/
 	
 };
 
@@ -213,17 +216,41 @@ SceneGameScene.prototype.handleKeyDown = function (keyCode) {
 
 function sendNextPlayer()
 {
+	var string1 = {
+			type: "Information",
+			text: "Player "+(playerTurn+1)+" turn."
+	};
 	//Enviamos a todos los jugadores info sobre de quién es el turno.
-	actualChannel.send("Player "+(playerTurn+1)+" turn.", "broadcast");
+	actualChannel.send(JSON.stringify(string1), "broadcast");
 	//Damos turno al jugador en cuestión.
-	actualChannel.send("Go", playersApp[playerTurn]['idClient']);
+	var string2 = {
+			text: "Go"
+	};
+	actualChannel.send(JSON.stringify(string2), playersApp[playerTurn]['idClient']);
 }
 
 
-function sendCardToPlayer(stringCard, idPlayer)
+function sendCardToPlayer(number, colour, idPlayer)
 {
-	actualChannel.send('Card', idPlayer);
-	actualChannel.send(stringCard, idPlayer);
+	var string = {
+			text: "Card",
+			number: number,
+			colour:  colour
+		};
+	
+	actualChannel.send(JSON.stringify(string), idPlayer);
+}
+
+function setBorderActualPlayer()
+{
+	$('#player'+playerTurn+'').css('border-style', 'solid');
+	$('#player'+playerTurn+'').css('border-color', 'yellow');
+}
+
+function removeBorderActualPlayer()
+{
+	$('#player'+playerTurn+'').css('border-style', '');
+	$('#player'+playerTurn+'').css('border-color', '');
 }
 
 function chooseRandomCardFromPool()

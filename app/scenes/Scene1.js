@@ -12,6 +12,8 @@ SceneScene1.prototype.initialize = function () {
 	localDevice = null;
 	actualChannel = null;
 	numPlayers=0;
+	numColour=0;
+	colours = ["black", "blue", "green", "red"];
 	
 };
 
@@ -67,7 +69,7 @@ SceneScene1.prototype.handleKeyDown = function (keyCode) {
 			
 			//Cambiamos de Escena.
 			sf.scene.hide('Scene1');
-    		sf.scene.show('GameScene', actualChannel);
+    		sf.scene.show('GameScene');
     		sf.scene.focus('GameScene');
 			break;
 		default:
@@ -91,15 +93,29 @@ onConnect = function(channel)
 	
 	channel.on("clientConnect", function(client) {
 		console.log("new client = " + client);
-		//playersApp[numPlayers]['idClient'] = client.getId();
-		numPlayers++;
+		playersApp[numPlayers] = new Array();
+		playersApp[numPlayers]['idClient'] = client.id;
+		console.log(playersApp[numPlayers]['idClient']);
+		playersApp[numPlayers]['colour'] = colours[numColour];
+		playersApp[numPlayers]['points'] = 0;
+		
 		var message = {
-            type:"chat",
-            text: "Welcome "+client.attributes.name+"! This message was sent to you encrypted"
+            type:"welcome",
+            text: "Welcome "+client.attributes.name+"!"
         };
 
         client.send(JSON.stringify(message), true);
+        
+        message = {
+                type:"welcome",
+                text: "Colour",
+                colour: playersApp[numPlayers]['colour']
+            };
+
+        client.send(JSON.stringify(message), true);
 		console.log(client.attributes.name+" connected to the cannel.");
+		numPlayers++;
+		numColour++;
 		
     });
 };
