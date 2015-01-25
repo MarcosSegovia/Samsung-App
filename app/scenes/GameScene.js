@@ -61,10 +61,24 @@ SceneGameScene.prototype.handleShow = function () {
 	{
 		var message = JSON.parse(msg);
 		
+		if(message.text == "WIN")
+		{
+			$( ".gameScenario" ).append('<p id="victory"><b><font size="8" color="red">PLAYER '+(parseFloat(playerTurn)+parseFloat(1))+' WON!</font></b></p>');
+		}
 		if(message.text=="EndTurn")
 		{
-			var card = chooseRandomCardFromPool();
-			sendCardToPlayer(card['number'], card['colour'], playersApp[playerTurn]['idClient']);
+			if(message.card)
+			{
+				var card = chooseRandomCardFromPool();
+				if(!card)
+				{
+					console.log('No more cards on pool !');
+				}
+				else
+				{
+					sendCardToPlayer(card['number'], card['colour'], playersApp[playerTurn]['idClient']);
+				}
+			}
 			removeBorderActualPlayer();
 			
 			if(playerTurn==numPlayers-1)
@@ -103,82 +117,6 @@ SceneGameScene.prototype.handleShow = function () {
 	placeCard(startingCard['number'], startingCard['colour']);
 	setBorderActualPlayer();
 	sendNextPlayer();
-	/*
-	var cards=[];
-	cards[0]=[];
-	cards[0]['number'] = 10;
-	cards[0]['colour'] = 'red';
-	cards[1]=[];
-	cards[1]['number'] = 3;
-	cards[1]['colour'] = 'black';
-	cards[2]=[];
-	cards[2]['number'] = 4;
-	cards[2]['colour'] = 'red';
-	cards[3]=[];
-	cards[3]['number'] = 7;
-	cards[3]['colour'] = 'green';
-	cards[4]=[];
-	cards[4]['number'] = 6;
-	cards[4]['colour'] = 'blue';
-	cards[5]=[];
-	cards[5]['number'] = 9;
-	cards[5]['colour'] = 'blue';
-	cards[6]=[];
-	cards[6]['number'] = 1;
-	cards[6]['colour'] = 'blue';
-	cards[7]=[];
-	cards[7]['number'] = 2;
-	cards[7]['colour'] = 'red';
-	cards[8]=[];
-	cards[8]['number'] = 1;
-	cards[8]['colour'] = 'red';
-	cards[9]=[];
-	cards[9]['number'] = 3;
-	cards[9]['colour'] = 'red';
-	cards[10]=[];
-	cards[10]['number'] = 8;
-	cards[10]['colour'] = 'red';
-	cards[11]=[];
-	cards[11]['number'] = 9;
-	cards[11]['colour'] = 'red';
-	cards[12]=[];
-	cards[12]['number'] = 12;
-	cards[12]['colour'] = 'red';
-	cards[13]=[];
-	cards[13]['number'] = 5;
-	cards[13]['colour'] = 'red';
-	cards[14]=[];
-	cards[14]['number'] = 6;
-	cards[14]['colour'] = 'red';
-	cards[15]=[];
-	cards[15]['number'] = 7;
-	cards[15]['colour'] = 'red';
-	cards[16]=[];
-	cards[16]['number'] = 13;
-	cards[16]['colour'] = 'red';
-	cards[17]=[];
-	cards[17]['number'] = 11;
-	cards[17]['colour'] = 'red';
-	placeCard(cards[0]['number'], cards[0]['colour']);
-	placeCard(cards[1]['number'], cards[1]['colour']);
-	placeCard(cards[2]['number'], cards[2]['colour']);
-	placeCard(cards[3]['number'], cards[3]['colour']);
-	placeCard(cards[4]['number'], cards[4]['colour']);
-	placeCard(cards[5]['number'], cards[5]['colour']);
-	placeCard(cards[6]['number'], cards[6]['colour']);
-	placeCard(cards[7]['number'], cards[7]['colour']);
-	placeCard(cards[8]['number'], cards[8]['colour']);
-	placeCard(cards[9]['number'], cards[9]['colour']);
-	placeCard(cards[10]['number'], cards[10]['colour']);
-	placeCard(cards[11]['number'], cards[11]['colour']);
-	placeCard(cards[12]['number'], cards[12]['colour']);
-	placeCard(cards[13]['number'], cards[13]['colour']);
-	placeCard(cards[14]['number'], cards[14]['colour']);
-	placeCard(cards[15]['number'], cards[15]['colour']);
-	placeCard(cards[16]['number'], cards[16]['colour']);
-	placeCard(cards[17]['number'], cards[17]['colour']);
-	
-	*/
 };
 
 SceneGameScene.prototype.handleHide = function () {
@@ -273,10 +211,10 @@ function removeBorderActualPlayer()
 function chooseRandomCardFromPool()
 {
 	//Hacemos un random para todos los posibles numeros
+	var stacks = 0;
 	var number = Math.floor((Math.random() *52));
 	while(true)
 	{
-		console.log(number);
 		if(cardsApp[number]['delivered']==false)
 		{
 			cardsApp[number]['delivered']=true;
@@ -296,6 +234,16 @@ function chooseRandomCardFromPool()
 				number++;
 			}
 		}
+		
+		if(stacks>60)
+		{
+			return 0;
+		}
+		else
+		{
+			stacks++;
+		}
+		
 	}
 }
 
@@ -312,14 +260,14 @@ function placeCard(number, colour)
 		var big=false;
 		$( "#wrapper"+colour+"Cards img" ).each(function( index ) 
 		{
-	    	if($(this).attr('id')<number)
+	    	if($(this).attr('id') < parseFloat(number))
 			{
 	    		if(!big)
     			{
 	    			big=true;
     			}
 	    		
-	    		if(big&&little || index+1==$( "#wrapper"+colour+"Cards img" ).length)
+	    		if(big&&little || parseFloat(index)+parseFloat(1) == $( "#wrapper"+colour+"Cards img" ).length)
     			{
 		    		$(this).after('<img id="'+number+'" height="94" width="65" src="images/cards/'+colour+number+'.png">');
 		    		return false;

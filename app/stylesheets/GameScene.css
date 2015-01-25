@@ -54,3 +54,11 @@
 {
 	margin-left:3px;
 }
+
+#victory
+{
+	position: absolute;
+	top: 80px;
+	left: 380px;
+	width 200px;
+}
